@@ -14,7 +14,8 @@
     "dev": "node --watch src/server.js",
     "seed": "node src/db/seed.js",
     "test": "node tests/smoke.js",
-    "check": "node scripts/check-deploy.js"
+    "check": "node scripts/check-deploy.js",
+    "deploy:github": "node scripts/deploy-github.js"
   },
   "engines": {
     "node": ">=22.5"

@@ -1,0 +1,33 @@
+# NEXUS CHEATS — Render.com yayın ayarları
+# Bu dosyayı Render panelinde "Blueprint" olarak kullanabilirsiniz.
+# Alternatif olarak panelden manuel Web Service oluşturup aynı değerleri girin.
+
+services:
+  - type: web
+    name: nexus-cheats
+    runtime: node
+    region: frankfurt
+    plan: free
+    branch: main
+    buildCommand: npm install && npm run seed
+    startCommand: npm start
+    healthCheckPath: /saglik
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: TRUST_PROXY
+        value: "1"
+      # Kalıcı veritabanı için (ücretli plan gerekir):
+      # - key: DB_PATH
+      #   value: /var/data/nexus.db
+    # disk:
+    #   name: nexus-data
+    #   mountPath: /var/data
+    #   sizeGB: 1
