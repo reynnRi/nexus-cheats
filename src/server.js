@@ -61,13 +61,14 @@ app.use(cookieParser());
 
 let secret = process.env.SESSION_SECRET;
 if (!secret || secret.length < 32) {
-  if (IS_PROD) {
-    throw new Error(
-      'Üretim ortamında SESSION_SECRET tanımlanmalı (en az 32 karakter). .env dosyasına ekleyin.',
-    );
-  }
-  secret = crypto.randomBytes(32).toString('hex');
-  console.warn('[NEXUS] UYARI: SESSION_SECRET tanımlı değil. Geliştirme için geçici anahtar üretildi.');
+  // Üretimde güvenlik zayıflatılmaz; ancak uygulamanın açılışta çökmesi
+  // yerine rastgele bir anahtar üretilir ve durum yüksek sesle bildirilir.
+  // Oturumlar yeniden başlatmada geçersiz olur; kalıcı çözüm SESSION_SECRET
+  // ortam değişkenini tanımlamaktır.
+  secret = crypto.randomBytes(48).toString('hex');
+  console.warn('[NEXUS] UYARI: SESSION_SECRET tanımlı değil veya 32 karakterden kısa.');
+  console.warn('[NEXUS] Rastgele geçici anahtar üretildi; yeniden başlatmada oturumlar kapanır.');
+  console.warn(`[NEXUS] Önerilen değer: ${crypto.randomBytes(32).toString('hex')}`);
 }
 
 app.use(session({
@@ -83,6 +84,15 @@ app.use(session({
     maxAge: 1000 * 60 * 60 * 8,
   },
 }));
+
+/* ------------------------------------------- ters proxy ve guven */
+
+// Render, Railway, Fly gibi platformlarda uygulama bir ters proxy arkasinda
+// calisir. TRUST_PROXY tanimliysa Express X-Forwarded-* basliklarina guvenir;
+// bu, dogru IP ve HTTPS algisi icin gereklidir.
+if (String(process.env.TRUST_PROXY || '').trim() === '1') {
+  app.set('trust proxy', 1);
+}
 
 /* --------------------------------------------------------------- statik */
 
@@ -195,9 +205,34 @@ app.use((err, req, res, next) => {
 /* ----------------------------------------------------------------- start */
 
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`NEXUS CHEATS çalışıyor → http://localhost:${PORT}`);
+  const server = app.listen(PORT, () => {
+    console.log(`NEXUS CHEATS çalışıyor → port ${PORT}`);
+    console.log(`Ortam: ${process.env.NODE_ENV || 'development'}`);
     console.log(`Veritabanı: ${DB_PATH}`);
+
+    if (!process.env.SESSION_SECRET || process.env.SESSION_SECRET.length < 32) {
+      console.warn('UYARI: SESSION_SECRET tanımlı değil — oturumlar yeniden başlatmada kapanır.');
+    }
+    if (String(process.env.TRUST_PROXY || '') !== '1' && IS_PROD) {
+      console.warn('UYARI: TRUST_PROXY=1 tanımlı değil — proxy arkasında IP/HTTPS yanlış algılanabilir.');
+    }
+  });
+
+  // Platform kapatma sinyallerinde temiz cikis.
+  const shutdown = (signal) => {
+    console.log(`\n${signal} alındı, sunucu kapatılıyor...`);
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(0), 5000).unref();
+  };
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+
+  // Beklenmeyen hatalarda cokme yerine logla.
+  process.on('unhandledRejection', (reason) => {
+    console.error('[NEXUS] İşlenmeyen promise reddi:', reason);
+  });
+  process.on('uncaughtException', (err) => {
+    console.error('[NEXUS] Yakalanmayan hata:', err);
   });
 }
 
