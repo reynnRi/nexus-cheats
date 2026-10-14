@@ -1,0 +1,56 @@
+<section class="page-head">
+  <div class="container">
+    <p class="section-kicker">KATALOG</p>
+    <h1 class="page-title">Ürünler</h1>
+    <p class="section-lead">VALORANT ve Counter-Strike 2 için eğitim programları, rehberler ve analiz hizmetleri.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="filter-bar reveal" role="group" aria-label="Oyun filtresi">
+      <a href="/urunler" class="chip <%= gameFilter === 'all' ? 'is-active' : '' %>">Tümü</a>
+      <a href="/urunler?oyun=valorant" class="chip <%= gameFilter === 'valorant' ? 'is-active' : '' %>">VALORANT</a>
+      <a href="/urunler?oyun=cs2" class="chip <%= gameFilter === 'cs2' ? 'is-active' : '' %>">COUNTER-STRIKE 2</a>
+    </div>
+
+    <% groups.forEach(function (group) { %>
+      <% if (gameFilter !== 'all' && gameFilter !== group.key) return; %>
+      <div class="game-section">
+        <header class="game-section-head reveal">
+          <h2 class="game-section-title"><span class="neon"><%= group.label %></span></h2>
+          <p class="game-section-count"><%= group.items.length %> ürün</p>
+        </header>
+
+        <% if (group.items.length) { %>
+          <div class="product-grid">
+            <% group.items.forEach(function (product) { %>
+              <%- include('./partials/product-card.ejs', { product: product }) %>
+            <% }); %>
+          </div>
+        <% } else { %>
+          <p class="empty-note">Bu kategoride şu anda yayında ürün bulunmuyor.</p>
+        <% } %>
+      </div>
+    <% }); %>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="section-kicker">ÜYELİK</p>
+      <h2 class="section-title">Tüm Ürünler İçin <span class="neon">Tek Üyelik</span></h2>
+      <p class="section-lead">Fiyatlar her iki oyun kategorisinde de aynıdır.</p>
+    </header>
+    <div class="mini-plan-grid">
+      <% planList.forEach(function (plan) { %>
+        <a class="mini-plan reveal" href="/paketler">
+          <span class="mini-plan-name"><%= plan.name %></span>
+          <span class="mini-plan-price"><%= helpers.formatTL(plan.price_kurus) %></span>
+          <span class="mini-plan-period"><%= plan.duration_days === null ? 'Süresiz' : plan.duration_days + ' gün' %></span>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,107 @@
+<section class="page-head page-head-detail">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Sayfa yolu">
+      <a href="/">Ana Sayfa</a><span aria-hidden="true">/</span>
+      <a href="/urunler">Ürünler</a><span aria-hidden="true">/</span>
+      <a href="/urunler?oyun=<%= product.game %>"><%= product.game === 'valorant' ? 'VALORANT' : 'COUNTER-STRIKE 2' %></a>
+    </nav>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container detail-grid">
+    <div class="detail-main">
+      <div class="detail-media reveal">
+        <img src="<%= helpers.productArt(product.game, product.slug) %>" alt="<%= product.name %>" width="540" height="360">
+      </div>
+
+      <h1 class="detail-title reveal"><%= product.name %></h1>
+      <p class="detail-summary reveal"><%= product.summary %></p>
+
+      <div class="detail-block reveal">
+        <h2>Ürün Açıklaması</h2>
+        <p><%= product.description %></p>
+      </div>
+
+      <div class="detail-block reveal">
+        <h2>Özellikler</h2>
+        <ul class="feature-list feature-list-lg">
+          <% product.features.forEach(function (f) { %>
+            <li><%= f %></li>
+          <% }); %>
+        </ul>
+      </div>
+
+      <div class="detail-block reveal">
+        <h2>Uyumluluk</h2>
+        <p class="compat-note"><%= product.compatibility %></p>
+      </div>
+
+      <div class="notice notice-warn reveal">
+        <h3>Kullanım Kuralları</h3>
+        <p>
+          Bu ürün bir eğitim ve gelişim aracıdır. Oyun dosyalarını değiştirmez, oyun içi avantaj
+          sağlayan üçüncü taraf yazılım içermez. Oyunların kullanım koşullarına uygun şekilde
+          kullanılmalıdır.
+        </p>
+      </div>
+    </div>
+
+    <aside class="detail-side">
+      <div class="buy-card reveal">
+        <p class="buy-label">Ürün fiyatı</p>
+        <p class="buy-price"><%= helpers.formatTL(product.price_kurus) %></p>
+        <p class="buy-note">Bu ürün, aktif üyeliği olan kullanıcıların panelinden erişilebilir.</p>
+
+        <ul class="buy-meta">
+          <li><span>Oyun</span><strong><%= product.game === 'valorant' ? 'VALORANT' : 'COUNTER-STRIKE 2' %></strong></li>
+          <li><span>Teslim</span><strong>Dijital / anında</strong></li>
+          <li><span>Destek</span><strong>Panel üzerinden</strong></li>
+        </ul>
+
+        <% if (currentUser) { %>
+          <% if (membershipInfo.active) { %>
+            <a href="/panel" class="btn btn-primary btn-block">Panelde Aç</a>
+            <p class="buy-status buy-status-ok">Aktif üyeliğiniz: <%= membershipInfo.planName %> · <%= membershipInfo.label %></p>
+          <% } else { %>
+            <a href="/paketler" class="btn btn-primary btn-block">Üyelik Paketini Seç</a>
+            <p class="buy-status">Bu ürüne erişmek için aktif bir üyelik gerekir.</p>
+          <% } %>
+        <% } else { %>
+          <a href="/giris?devam=<%= encodeURIComponent('/urunler/' + product.slug) %>" class="btn btn-primary btn-block">Giriş Yap ve Eriş</a>
+          <a href="/kayit" class="btn btn-outline btn-block">Hesap Oluştur</a>
+        <% } %>
+      </div>
+
+      <div class="buy-card reveal">
+        <h3 class="buy-card-title">Üyelik Seçenekleri</h3>
+        <p class="buy-note">Aynı üyelik fiyatları her iki oyun için de geçerlidir.</p>
+        <ul class="plan-mini-list">
+          <% planList.forEach(function (plan) { %>
+            <li>
+              <span class="plan-mini-name"><%= plan.name %></span>
+              <span class="plan-mini-price"><%= helpers.formatTL(plan.price_kurus) %></span>
+            </li>
+          <% }); %>
+        </ul>
+        <a href="/paketler" class="btn btn-outline btn-block">Paketleri Karşılaştır</a>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<% if (related.length) { %>
+<section class="section section-alt">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="section-kicker">BENZER ÜRÜNLER</p>
+      <h2 class="section-title">Bunlar da <span class="neon">İlgini Çekebilir</span></h2>
+    </header>
+    <div class="product-grid">
+      <% related.forEach(function (p) { %>
+        <%- include('./partials/product-card.ejs', { product: p }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>

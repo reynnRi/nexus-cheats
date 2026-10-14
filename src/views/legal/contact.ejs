@@ -1,0 +1,62 @@
+<section class="page-head">
+  <div class="container">
+    <p class="section-kicker">KURUMSAL</p>
+    <h1 class="page-title">İletişim</h1>
+    <p class="section-lead">Sorularınız ve destek talepleriniz için bize ulaşın.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container contact-grid">
+    <div class="contact-card reveal">
+      <h2>Destek Kanalı</h2>
+      <p class="panel-note">
+        En hızlı yanıt için kullanıcı panelinizdeki destek sistemini kullanın. Talepleriniz kayıt
+        altına alınır ve geçmişiniz saklanır.
+      </p>
+      <ul class="kv-list">
+        <li><span>Destek paneli</span><strong><a href="/panel/destek">Talep oluştur</a></strong></li>
+        <li><span>E-posta</span><strong><%= company.email %></strong></li>
+        <li><span>Çalışma saatleri</span><strong><%= company.supportHours %></strong></li>
+      </ul>
+    </div>
+
+    <div class="contact-card reveal">
+      <h2>Şirket Bilgileri</h2>
+      <ul class="kv-list">
+        <li><span>Ünvan</span><strong><%= company.legalName %></strong></li>
+        <li><span>Adres</span><strong><%= company.address %></strong></li>
+        <li><span>Vergi dairesi</span><strong><%= company.taxOffice %></strong></li>
+      </ul>
+    </div>
+
+    <div class="contact-card reveal">
+      <h2>Sık Sorulan Sorular</h2>
+      <details class="faq">
+        <summary>Üyeliğim ne zaman başlar?</summary>
+        <p>Ödeme onayı alındığı anda üyeliğiniz otomatik olarak etkinleşir.</p>
+      </details>
+      <details class="faq">
+        <summary>Fiyatlar her oyun için aynı mı?</summary>
+        <p>Evet. Aylık 999 TL, yıllık 12.000 TL ve sınırsız 33.000 TL fiyatları her iki kategoride de geçerlidir.</p>
+      </details>
+      <details class="faq">
+        <summary>Şifremi unuttum, ne yapmalıyım?</summary>
+        <p>Destek panelinden "Teknik" kategorisinde talep oluşturun; kimlik doğrulaması sonrası işlem yapılır.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="notice notice-info reveal">
+      <h3>Yasal Uyarı</h3>
+      <p>
+        NEXUS CHEATS bir eğitim ve koçluk platformudur. Oyun geliştiricileri veya yayıncılarıyla
+        resmî bir ortaklığı yoktur. Oyun dosyalarını değiştiren veya haksız avantaj sağlayan
+        yazılımlar sunulmaz.
+      </p>
+    </div>
+  </div>
+</section>

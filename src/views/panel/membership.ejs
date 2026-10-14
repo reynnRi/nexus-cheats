@@ -1,0 +1,75 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">KULLANICI PANELİ</p>
+    <h1 class="page-title">Üyeliğim</h1>
+    <p class="section-lead">Aktif üyeliğin ve geçmiş üyelik kayıtların.</p>
+  </div>
+</section>
+
+<div class="container panel-layout">
+  <%- include('./partials/nav.ejs', { activeNav: activeNav }) %>
+
+  <div class="panel-content">
+    <div class="stat-grid">
+      <article class="stat-card reveal">
+        <p class="stat-label">Durum</p>
+        <p class="stat-value <%= membershipInfo.active ? 'stat-ok' : 'stat-off' %>"><%= membershipInfo.active ? 'Aktif' : 'Pasif' %></p>
+        <p class="stat-meta"><%= membershipInfo.planName || 'Üyelik yok' %></p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Kalan süre</p>
+        <p class="stat-value">
+          <% if (membershipInfo.lifetime) { %>Sınırsız<% } else if (membershipInfo.active) { %><%= membershipInfo.daysLeft %> gün<% } else { %>—<% } %>
+        </p>
+        <p class="stat-meta"><%= membershipInfo.label %></p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Bitiş tarihi</p>
+        <p class="stat-value stat-value-sm"><%= membershipInfo.endsAt ? helpers.formatDayTR(membershipInfo.endsAt) : (membershipInfo.lifetime ? 'Süresiz' : '—') %></p>
+        <p class="stat-meta">Türkiye saatiyle</p>
+      </article>
+    </div>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Üyelik Geçmişi</h2></header>
+      <% if (membershipList.length) { %>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th scope="col">Paket</th><th scope="col">Başlangıç</th><th scope="col">Bitiş</th><th scope="col">Durum</th></tr>
+            </thead>
+            <tbody>
+              <% membershipList.forEach(function (m) { %>
+                <tr>
+                  <th scope="row"><%= m.plan_name %></th>
+                  <td><%= helpers.formatDayTR(m.starts_at) %></td>
+                  <td><%= m.is_lifetime ? 'Süresiz' : helpers.formatDayTR(m.ends_at) %></td>
+                  <td><span class="status status-<%= m.status %>"><%= { active: 'Aktif', superseded: 'Yenilendi', cancelled: 'İptal', expired: 'Süresi doldu' }[m.status] || m.status %></span></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p class="empty-note">Henüz üyelik kaydınız yok.</p>
+      <% } %>
+    </section>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Yeni Paket Al</h2></header>
+      <p class="panel-note">Yeni paket satın aldığınızda kalan süreniz silinmez, bitiş tarihinizin üzerine eklenir.</p>
+      <div class="mini-plan-grid">
+        <% planList.forEach(function (plan) { %>
+          <form action="/panel/siparis" method="post" class="mini-plan mini-plan-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="planId" value="<%= plan.id %>">
+            <span class="mini-plan-name"><%= plan.name %></span>
+            <span class="mini-plan-price"><%= helpers.formatTL(plan.price_kurus) %></span>
+            <span class="mini-plan-period"><%= plan.duration_days === null ? 'Süresiz' : plan.duration_days + ' gün' %></span>
+            <button type="submit" class="btn btn-outline btn-sm btn-block">Satın Al</button>
+          </form>
+        <% }); %>
+      </div>
+    </section>
+  </div>
+</div>

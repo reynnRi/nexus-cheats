@@ -1,0 +1,90 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">YÖNETİM PANELİ</p>
+    <h1 class="page-title"><%= product ? 'Ürünü Düzenle' : 'Yeni Ürün' %></h1>
+    <p class="section-lead"><%= product ? product.name : 'Kataloğa yeni bir ürün ekleyin.' %></p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <form action="<%= product ? '/admin/urunler/' + product.id : '/admin/urunler' %>" method="post" class="form-grid form-card reveal" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+      <div class="field">
+        <label for="name">Ürün adı</label>
+        <input type="text" id="name" name="name" value="<%= form.name || '' %>" required minlength="3" maxlength="120">
+        <% if (errors.name) { %><p class="field-error"><%= errors.name %></p><% } %>
+      </div>
+
+      <div class="field">
+        <label for="slug">Slug (URL)</label>
+        <input type="text" id="slug" name="slug" value="<%= form.slug || '' %>" required pattern="[a-z0-9\-]{3,60}" placeholder="valorant-aim-programi">
+        <% if (errors.slug) { %><p class="field-error"><%= errors.slug %></p><% } %>
+      </div>
+
+      <div class="field">
+        <label for="game">Oyun</label>
+        <select id="game" name="game" required>
+          <% games.forEach(function (g) { %>
+            <option value="<%= g.key %>" <%= form.game === g.key ? 'selected' : '' %>><%= g.label %></option>
+          <% }); %>
+        </select>
+        <% if (errors.game) { %><p class="field-error"><%= errors.game %></p><% } %>
+      </div>
+
+      <div class="field">
+        <label for="priceTL">Fiyat (TL)</label>
+        <input type="number" id="priceTL" name="priceTL" value="<%= ((form.price_kurus || 0) / 100) %>" min="0" step="0.01">
+        <% if (errors.priceTL) { %><p class="field-error"><%= errors.priceTL %></p><% } %>
+      </div>
+
+      <div class="field field-full">
+        <label for="summary">Kısa açıklama</label>
+        <input type="text" id="summary" name="summary" value="<%= form.summary || '' %>" required minlength="10" maxlength="240">
+        <% if (errors.summary) { %><p class="field-error"><%= errors.summary %></p><% } %>
+      </div>
+
+      <div class="field field-full">
+        <label for="description">Detaylı açıklama</label>
+        <textarea id="description" name="description" rows="5" maxlength="4000"><%= form.description || '' %></textarea>
+      </div>
+
+      <div class="field field-full">
+        <label for="features">Özellikler</label>
+        <textarea id="features" name="features" rows="6" placeholder="Her satıra bir özellik yazın"><%= featuresText %></textarea>
+        <p class="field-hint">Her satır bir madde olarak listelenir.</p>
+      </div>
+
+      <div class="field field-full">
+        <label for="compatibility">Uyumluluk bilgisi</label>
+        <input type="text" id="compatibility" name="compatibility" value="<%= form.compatibility || '' %>" maxlength="300">
+      </div>
+
+      <div class="field">
+        <label for="imageKey">Görsel anahtarı</label>
+        <input type="text" id="imageKey" name="imageKey" value="<%= form.image_key || 'default' %>" maxlength="40">
+        <p class="field-hint">Görsel, oyun temasına göre otomatik üretilir.</p>
+      </div>
+
+      <div class="field">
+        <label for="sortOrder">Sıralama</label>
+        <input type="number" id="sortOrder" name="sortOrder" value="<%= form.sort_order || 0 %>" min="0" max="9999">
+      </div>
+
+      <div class="field field-full field-check">
+        <label class="check">
+          <input type="checkbox" name="isActive" value="1" <%= form.is_active ? 'checked' : '' %>>
+          <span>Ürün sitede yayında olsun</span>
+        </label>
+      </div>
+
+      <div class="field field-full form-actions">
+        <button type="submit" class="btn btn-primary"><%= product ? 'Değişiklikleri Kaydet' : 'Ürünü Ekle' %></button>
+        <a href="/admin/urunler" class="btn btn-ghost">Vazgeç</a>
+      </div>
+    </form>
+  </div>
+</div>

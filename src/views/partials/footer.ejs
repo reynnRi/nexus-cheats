@@ -1,0 +1,57 @@
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-col footer-brand">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">N</span>
+        <span class="brand-text">NEXUS<span>CHEATS</span></span>
+      </a>
+      <p class="footer-note">
+        Rekabetçi FPS oyuncuları için eğitim programları, maç analizi ve koçluk hizmetleri.
+        Oyunların kullanım kurallarına uygun, eğitim odaklı bir platformdur.
+      </p>
+    </div>
+
+    <div class="footer-col">
+      <h3>Platform</h3>
+      <ul>
+        <li><a href="/urunler">Ürünler</a></li>
+        <li><a href="/paketler">Üyelik Paketleri</a></li>
+        <li><a href="/panel">Kullanıcı Paneli</a></li>
+        <li><a href="/panel/destek">Destek Talebi</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3>Kurumsal</h3>
+      <ul>
+        <li><a href="/gizlilik-politikasi">Gizlilik Politikası</a></li>
+        <li><a href="/kullanim-kosullari">Kullanım Koşulları</a></li>
+        <li><a href="/iade-politikasi">İade Politikası</a></li>
+        <li><a href="/iletisim">İletişim</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h3>Ödeme</h3>
+      <p class="footer-note footer-payment">
+        <% if (payments.ready) { %>
+          <span class="pill pill-ok"><%= payments.badge %></span>
+        <% } else { %>
+          <span class="pill pill-warn">Ödeme altyapısı yapılandırılmadı</span>
+        <% } %>
+      </p>
+      <p class="footer-note">
+        Fiyatlar Türk lirası (TL) cinsindendir. Kart bilgileri ödeme sağlayıcısının
+        güvenli sayfasında işlenir; bu sunucuda saklanmaz.
+      </p>
+    </div>
+  </div>
+
+  <div class="container footer-bottom">
+    <p>&copy; <%= new Date().getFullYear() %> NEXUS CHEATS. Tüm hakları saklıdır.</p>
+    <p class="footer-legal">
+      NEXUS CHEATS, oyun geliştiricileri veya yayıncılarıyla resmî bir ortaklık içinde değildir.
+      VALORANT, Riot Games'in; Counter-Strike 2, Valve Corporation'ın tescilli markalarıdır.
+    </p>
+  </div>
+</footer>

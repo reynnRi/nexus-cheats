@@ -1,0 +1,36 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">ÖDEME SONUCU</p>
+    <h1 class="page-title">Sipariş Durumu</h1>
+  </div>
+</section>
+
+<div class="container panel-layout">
+  <%- include('../panel/partials/nav.ejs', { activeNav: activeNav }) %>
+
+  <div class="panel-content">
+    <div class="detail-card reveal">
+      <ul class="kv-list">
+        <li><span>Sipariş numarası</span><strong class="mono"><%= order.order_no %></strong></li>
+        <li><span>Paket</span><strong><%= order.plan_name %></strong></li>
+        <li><span>Tutar</span><strong class="price"><%= helpers.formatTL(order.amount_kurus) %></strong></li>
+        <li><span>Durum</span><strong><span class="status status-<%= order.status %>"><%= { pending: 'Ödeme bekliyor', paid: 'Ödendi', cancelled: 'İptal', refunded: 'İade edildi' }[order.status] || order.status %></span></strong></li>
+      </ul>
+    </div>
+
+    <% if (order.status === 'paid') { %>
+      <div class="notice notice-info reveal">
+        <h3>Ödeme onaylandı</h3>
+        <p>Üyeliğiniz etkinleştirildi. <a href="/panel/uyelik">Üyeliğim</a> sayfasından kalan süreyi görebilirsiniz.</p>
+      </div>
+    <% } else { %>
+      <div class="notice notice-warn reveal">
+        <h3>Ödeme tamamlanmadı</h3>
+        <p>
+          Bu sipariş için ödeme onayı alınmadı. Üyelik <strong>başlatılmadı</strong> ve tahsilat yapılmadı.
+        </p>
+        <a href="/odeme/<%= order.order_no %>" class="btn btn-outline btn-sm">Ödeme Sayfasına Dön</a>
+      </div>
+    <% } %>
+  </div>
+</div>

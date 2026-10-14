@@ -1,0 +1,26 @@
+# Bagimliliklar
+node_modules/
+
+# Veritabani, sertifikalar, yerel veriler
+data/
+
+# Ortam degiskenleri (SIRLAR - asla yuklenmez)
+.env
+.env.local
+.env.production
+
+# Gunlukler
+*.log
+npm-debug.log*
+
+# Gecici dosyalar
+*.out
+*.tmp
+*.bak
+git-installer.exe
+mingit.zip
+
+# Isletim sistemi
+.DS_Store
+Thumbs.db
+desktop.ini

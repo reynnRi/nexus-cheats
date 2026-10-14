@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= pageTitle %></title>
+  <meta name="description" content="<%= pageDescription || 'NEXUS CHEATS — Rekabetçi FPS oyuncuları için eğitim, analiz ve koçluk platformu.' %>">
+  <meta name="theme-color" content="#0a0a0c">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="<%= bodyClass || '' %>">
+  <a class="skip-link" href="#main">İçeriğe geç</a>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <%- include('../partials/header.ejs') %>
+
+  <main id="main">
+    <%- include('../partials/flash.ejs') %>
+    <%- body %>
+  </main>
+
+  <%- include('../partials/footer.ejs') %>
+  <script src="/js/site.js" defer></script>
+</body>
+</html>

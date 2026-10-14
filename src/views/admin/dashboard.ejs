@@ -1,0 +1,104 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">YÖNETİM PANELİ</p>
+    <h1 class="page-title">Genel Bakış</h1>
+    <p class="section-lead">Satış, üyelik ve destek özeti. Tüm değerler gerçek verilerden hesaplanır.</p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <% if (!paymentStatus.ready) { %>
+      <div class="notice notice-warn reveal">
+        <h3>Ödeme altyapısı yapılandırılmadı</h3>
+        <p><%= paymentStatus.detail %></p>
+        <p class="notice-small">Bu durumda siparişler "ödeme bekliyor" olarak kaydedilir; üyelikler yalnızca manuel tanımlama ile verilebilir.</p>
+      </div>
+    <% } %>
+
+    <div class="stat-grid">
+      <article class="stat-card reveal">
+        <p class="stat-label">Toplam ciro (ödenmiş)</p>
+        <p class="stat-value stat-value-sm"><%= helpers.formatTL(stats.revenue_kurus) %></p>
+        <p class="stat-meta"><%= helpers.formatNumber(stats.paid_count) %> ödenmiş sipariş</p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Bekleyen sipariş</p>
+        <p class="stat-value"><%= helpers.formatNumber(stats.pending_count) %></p>
+        <p class="stat-meta">Ödeme onayı bekleyen</p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Kullanıcı</p>
+        <p class="stat-value"><%= helpers.formatNumber(userCount) %></p>
+        <p class="stat-meta"><%= helpers.formatNumber(activeMembers) %> aktif üye</p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Açık destek talebi</p>
+        <p class="stat-value"><%= helpers.formatNumber(openTickets) %></p>
+        <p class="stat-meta"><a href="/admin/destek">Talepleri gör</a></p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Yayında ürün</p>
+        <p class="stat-value"><%= helpers.formatNumber(productCount) %></p>
+        <p class="stat-meta"><a href="/admin/urunler">Ürünleri yönet</a></p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Aktif paket</p>
+        <p class="stat-value"><%= helpers.formatNumber(planCount) %></p>
+        <p class="stat-meta"><a href="/admin/paketler">Paketleri yönet</a></p>
+      </article>
+    </div>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head">
+        <h2>Son Siparişler</h2>
+        <a href="/admin/siparisler" class="link-more">Tümü</a>
+      </header>
+
+      <% if (recentOrders.length) { %>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th scope="col">Sipariş</th><th scope="col">Kullanıcı</th><th scope="col">Paket</th><th scope="col">Tutar</th><th scope="col">Durum</th><th scope="col">Tarih</th></tr>
+            </thead>
+            <tbody>
+              <% recentOrders.forEach(function (o) { %>
+                <tr>
+                  <th scope="row" class="mono"><%= o.order_no %></th>
+                  <td><%= o.user_name %><br><span class="muted"><%= o.user_email %></span></td>
+                  <td><%= o.plan_name %></td>
+                  <td class="price"><%= helpers.formatTL(o.amount_kurus) %></td>
+                  <td><span class="status status-<%= o.status %>"><%= { pending: 'Ödeme bekliyor', paid: 'Ödendi', cancelled: 'İptal', refunded: 'İade edildi' }[o.status] || o.status %></span></td>
+                  <td><%= helpers.formatDateTR(o.created_at) %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p class="empty-note">Henüz sipariş kaydı yok.</p>
+      <% } %>
+    </section>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Paket Fiyatları</h2></header>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead><tr><th scope="col">Paket</th><th scope="col">Süre</th><th scope="col">Fiyat</th><th scope="col">Durum</th></tr></thead>
+          <tbody>
+            <% planList.forEach(function (p) { %>
+              <tr>
+                <th scope="row"><%= p.name %></th>
+                <td><%= p.duration_days === null ? 'Süresiz' : p.duration_days + ' gün' %></td>
+                <td class="price"><%= helpers.formatTL(p.price_kurus) %></td>
+                <td><span class="status status-<%= p.is_active ? 'paid' : 'cancelled' %>"><%= p.is_active ? 'Yayında' : 'Kapalı' %></span></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>

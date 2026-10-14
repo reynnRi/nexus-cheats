@@ -1,0 +1,83 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">YÖNETİM PANELİ</p>
+    <h1 class="page-title">Siparişler</h1>
+    <p class="section-lead">Siparişleri görüntüleyin ve durumlarını yönetin.</p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <% if (!paymentStatus.ready) { %>
+      <div class="notice notice-warn reveal">
+        <h3>Ödeme altyapısı yapılandırılmadı</h3>
+        <p><%= paymentStatus.detail %></p>
+        <p class="notice-small">
+          "Ödendi" olarak işaretlemek üyeliği başlatır. Bu işlemi yalnızca tahsilatı
+          kendi kanallarınızdan doğruladıktan sonra yapın.
+        </p>
+      </div>
+    <% } %>
+
+    <form action="/admin/siparisler" method="get" class="filter-form reveal">
+      <div class="field">
+        <label for="durum">Durum</label>
+        <select id="durum" name="durum">
+          <option value="" <%= filter.status === '' ? 'selected' : '' %>>Tümü</option>
+          <option value="pending" <%= filter.status === 'pending' ? 'selected' : '' %>>Ödeme bekliyor</option>
+          <option value="paid" <%= filter.status === 'paid' ? 'selected' : '' %>>Ödendi</option>
+          <option value="cancelled" <%= filter.status === 'cancelled' ? 'selected' : '' %>>İptal</option>
+          <option value="refunded" <%= filter.status === 'refunded' ? 'selected' : '' %>>İade edildi</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="q">Ara</label>
+        <input type="text" id="q" name="q" value="<%= filter.q %>" placeholder="Sipariş no veya e-posta">
+      </div>
+      <div class="field field-inline-action">
+        <button type="submit" class="btn btn-outline btn-sm">Filtrele</button>
+      </div>
+    </form>
+
+    <% if (orderList.length) { %>
+      <div class="table-wrap reveal">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Sipariş</th><th scope="col">Kullanıcı</th><th scope="col">Paket</th>
+              <th scope="col">Tutar</th><th scope="col">Durum</th><th scope="col">Tarih</th><th scope="col">İşlem</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orderList.forEach(function (o) { %>
+              <tr>
+                <th scope="row" class="mono"><%= o.order_no %></th>
+                <td><%= o.user_name %><br><span class="muted"><%= o.user_email %></span></td>
+                <td><%= o.plan_name %></td>
+                <td class="price"><%= helpers.formatTL(o.amount_kurus) %></td>
+                <td><span class="status status-<%= o.status %>"><%= { pending: 'Ödeme bekliyor', paid: 'Ödendi', cancelled: 'İptal', refunded: 'İade edildi' }[o.status] || o.status %></span></td>
+                <td><%= helpers.formatDateTR(o.created_at) %></td>
+                <td>
+                  <form action="/admin/siparisler/<%= o.id %>/durum" method="post" class="inline-form">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <select name="status" aria-label="Sipariş durumu">
+                      <option value="pending" <%= o.status === 'pending' ? 'selected' : '' %>>Ödeme bekliyor</option>
+                      <option value="paid" <%= o.status === 'paid' ? 'selected' : '' %>>Ödendi</option>
+                      <option value="cancelled" <%= o.status === 'cancelled' ? 'selected' : '' %>>İptal</option>
+                      <option value="refunded" <%= o.status === 'refunded' ? 'selected' : '' %>>İade edildi</option>
+                    </select>
+                    <button type="submit" class="btn btn-outline btn-xs">Uygula</button>
+                  </form>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="empty-note">Bu filtreyle eşleşen sipariş bulunamadı.</p>
+    <% } %>
+  </div>
+</div>

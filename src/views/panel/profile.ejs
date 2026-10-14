@@ -1,0 +1,77 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">KULLANICI PANELİ</p>
+    <h1 class="page-title">Profil Ayarları</h1>
+    <p class="section-lead">Hesap bilgilerinizi ve şifrenizi yönetin.</p>
+  </div>
+</section>
+
+<div class="container panel-layout">
+  <%- include('./partials/nav.ejs', { activeNav: activeNav }) %>
+
+  <div class="panel-content">
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Hesap Bilgileri</h2></header>
+
+      <form action="/panel/profil" method="post" class="form-grid" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div class="field">
+          <label for="fullName">Ad Soyad</label>
+          <input type="text" id="fullName" name="fullName" value="<%= form.fullName %>" required minlength="3" maxlength="80">
+          <% if (errors.fullName) { %><p class="field-error"><%= errors.fullName %></p><% } %>
+        </div>
+
+        <div class="field">
+          <label for="email">E-posta</label>
+          <input type="email" id="email" name="email" value="<%= form.email %>" required maxlength="160">
+          <% if (errors.email) { %><p class="field-error"><%= errors.email %></p><% } %>
+        </div>
+
+        <div class="field field-full">
+          <button type="submit" class="btn btn-primary">Bilgileri Kaydet</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Şifre Değiştir</h2></header>
+
+      <form action="/panel/profil/sifre" method="post" class="form-grid" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div class="field field-full">
+          <label for="currentPassword">Mevcut şifre</label>
+          <input type="password" id="currentPassword" name="currentPassword" autocomplete="current-password" required>
+          <% if (passwordErrors.currentPassword) { %><p class="field-error"><%= passwordErrors.currentPassword %></p><% } %>
+        </div>
+
+        <div class="field">
+          <label for="newPassword">Yeni şifre</label>
+          <input type="password" id="newPassword" name="newPassword" autocomplete="new-password" required minlength="8">
+          <p class="field-hint">En az 8 karakter, bir harf ve bir rakam içermeli.</p>
+          <% if (passwordErrors.newPassword) { %><p class="field-error"><%= passwordErrors.newPassword %></p><% } %>
+        </div>
+
+        <div class="field">
+          <label for="newPasswordConfirm">Yeni şifre (tekrar)</label>
+          <input type="password" id="newPasswordConfirm" name="newPasswordConfirm" autocomplete="new-password" required minlength="8">
+          <% if (passwordErrors.newPasswordConfirm) { %><p class="field-error"><%= passwordErrors.newPasswordConfirm %></p><% } %>
+        </div>
+
+        <div class="field field-full">
+          <button type="submit" class="btn btn-outline">Şifreyi Güncelle</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Hesap Bilgisi</h2></header>
+      <ul class="kv-list">
+        <li><span>Kullanıcı ID</span><strong class="mono">#<%= currentUser.id %></strong></li>
+        <li><span>Rol</span><strong><%= currentUser.role === 'admin' ? 'Yönetici' : 'Üye' %></strong></li>
+        <li><span>Kayıt tarihi</span><strong><%= helpers.formatDateTR(currentUser.created_at) %></strong></li>
+      </ul>
+    </section>
+  </div>
+</div>

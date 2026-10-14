@@ -1,0 +1,91 @@
+<section class="page-head">
+  <div class="container">
+    <p class="section-kicker">ÜYELİK</p>
+    <h1 class="page-title">Üyelik Paketleri</h1>
+    <p class="section-lead">Tek üyelikle desteklenen tüm ürünlere eriş. Fiyatlar Türk lirası (TL) cinsindendir ve her iki oyun kategorisinde geçerlidir.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="plan-grid">
+      <% planList.forEach(function (plan) { %>
+        <%- include('./partials/plan-card.ejs', { plan: plan }) %>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="section-kicker">KARŞILAŞTIRMA</p>
+      <h2 class="section-title">Paket <span class="neon">Detayları</span></h2>
+    </header>
+
+    <div class="table-wrap reveal">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th scope="col">Paket</th>
+            <th scope="col">Süre</th>
+            <th scope="col">Fiyat</th>
+            <th scope="col">Ürünlere Erişim</th>
+            <th scope="col">Kullanıcı Paneli</th>
+            <th scope="col">Bitiş Takibi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% planList.forEach(function (plan) { %>
+            <tr>
+              <th scope="row"><%= plan.name %></th>
+              <td><%= plan.duration_days === null ? 'Süresiz' : plan.duration_days + ' gün' %></td>
+              <td class="price"><%= helpers.formatTL(plan.price_kurus) %></td>
+              <td><span class="yes">Var</span></td>
+              <td><span class="yes">Var</span></td>
+              <td><%= plan.duration_days === null ? '<span class="muted">Gerekmez</span>' : '<span class="yes">Var</span>' %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="section-kicker">ÖDEME</p>
+      <h2 class="section-title">Ödeme <span class="neon">Durumu</span></h2>
+    </header>
+
+    <div class="notice <%= paymentStatus.ready ? 'notice-info' : 'notice-warn' %> reveal">
+      <h3><%= paymentStatus.badge %></h3>
+      <p><%= paymentStatus.detail %></p>
+      <p class="notice-small">
+        Ödeme altyapısı yapılandırılana kadar verilen siparişler <strong>"ödeme bekliyor"</strong>
+        durumunda kalır; hiçbir tahsilat yapılmaz ve üyelik başlatılmaz. Kart bilgileri hiçbir koşulda
+        bu sunucuya kaydedilmez.
+      </p>
+    </div>
+
+    <div class="faq-grid">
+      <details class="faq reveal">
+        <summary>Üyeliğim ne zaman aktif olur?</summary>
+        <p>Ödeme sağlayıcısından onay geldiği anda üyeliğiniz otomatik olarak etkinleşir ve panelinizde kalan gün sayısı görünür.</p>
+      </details>
+      <details class="faq reveal">
+        <summary>Üyeliğimi yükseltebilir miyim?</summary>
+        <p>Yeni bir paket satın aldığınızda kalan süreniz silinmez; mevcut bitiş tarihinizin üzerine eklenir.</p>
+      </details>
+      <details class="faq reveal">
+        <summary>İade hakkım var mı?</summary>
+        <p>Dijital içerik teslimi başlamamış siparişlerde iade talebi oluşturabilirsiniz. Ayrıntılar için <a href="/iade-politikasi">İade Politikası</a> sayfasına bakın.</p>
+      </details>
+      <details class="faq reveal">
+        <summary>Ürünler oyun kurallarına uygun mu?</summary>
+        <p>Evet. Sunduğumuz tüm ürünler eğitim, analiz ve koçluk içeriklidir; oyun dosyalarını değiştiren yazılımlar sunulmaz.</p>
+      </details>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,57 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">KULLANICI PANELİ</p>
+    <h1 class="page-title">Siparişlerim</h1>
+    <p class="section-lead">Tüm siparişlerin ve ödeme durumları.</p>
+  </div>
+</section>
+
+<div class="container panel-layout">
+  <%- include('./partials/nav.ejs', { activeNav: activeNav }) %>
+
+  <div class="panel-content">
+    <% if (!paymentStatus.ready) { %>
+      <div class="notice notice-warn reveal">
+        <h3>Ödeme altyapısı yapılandırılmadı</h3>
+        <p><%= paymentStatus.detail %></p>
+      </div>
+    <% } %>
+
+    <% if (orderList.length) { %>
+      <div class="table-wrap reveal">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Sipariş No</th>
+              <th scope="col">Paket</th>
+              <th scope="col">Tutar</th>
+              <th scope="col">Durum</th>
+              <th scope="col">Oluşturma</th>
+              <th scope="col">Dönem</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orderList.forEach(function (o) { %>
+              <tr>
+                <th scope="row" class="mono"><%= o.order_no %></th>
+                <td><%= o.plan_name %></td>
+                <td class="price"><%= helpers.formatTL(o.amount_kurus) %></td>
+                <td><span class="status status-<%= o.status %>"><%= { pending: 'Ödeme bekliyor', paid: 'Ödendi', cancelled: 'İptal', refunded: 'İade edildi' }[o.status] || o.status %></span></td>
+                <td><%= helpers.formatDateTR(o.created_at) %></td>
+                <td>
+                  <% if (o.period_start) { %>
+                    <%= helpers.formatDayTR(o.period_start) %> – <%= o.period_end ? helpers.formatDayTR(o.period_end) : 'Süresiz' %>
+                  <% } else { %>—<% } %>
+                </td>
+                <td><a href="/panel/siparisler/<%= o.order_no %>">Detay</a></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="empty-note">Henüz siparişiniz bulunmuyor. <a href="/paketler">Paketleri inceleyin</a>.</p>
+    <% } %>
+  </div>
+</div>

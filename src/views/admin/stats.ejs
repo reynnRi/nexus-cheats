@@ -1,0 +1,91 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">YÖNETİM PANELİ</p>
+    <h1 class="page-title">Satış İstatistikleri</h1>
+    <p class="section-lead">Tüm değerler sistemdeki gerçek sipariş kayıtlarından hesaplanır.</p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <div class="stat-grid">
+      <article class="stat-card reveal">
+        <p class="stat-label">Toplam ciro (ödenmiş)</p>
+        <p class="stat-value stat-value-sm"><%= helpers.formatTL(stats.revenue_kurus) %></p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Ödenmiş sipariş</p>
+        <p class="stat-value"><%= helpers.formatNumber(stats.paid_count) %></p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Bekleyen sipariş</p>
+        <p class="stat-value"><%= helpers.formatNumber(stats.pending_count) %></p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Toplam sipariş</p>
+        <p class="stat-value"><%= helpers.formatNumber(stats.total_count) %></p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Kullanıcı</p>
+        <p class="stat-value"><%= helpers.formatNumber(userCount) %></p>
+        <p class="stat-meta"><%= helpers.formatNumber(activeMembers) %> aktif üye</p>
+      </article>
+      <article class="stat-card reveal">
+        <p class="stat-label">Ortalama sepet</p>
+        <p class="stat-value stat-value-sm">
+          <% if (stats.paid_count > 0) { %><%= helpers.formatTL(Math.round(stats.revenue_kurus / stats.paid_count)) %><% } else { %>—<% } %>
+        </p>
+        <p class="stat-meta">Ödenmiş siparişler üzerinden</p>
+      </article>
+    </div>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Aylık Satışlar</h2></header>
+      <% if (stats.monthly.length) { %>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th scope="col">Ay</th><th scope="col">Ödenmiş sipariş</th><th scope="col">Ciro</th></tr></thead>
+            <tbody>
+              <% stats.monthly.forEach(function (m) { %>
+                <tr>
+                  <th scope="row"><%= m.month %></th>
+                  <td><%= helpers.formatNumber(m.paid_count) %></td>
+                  <td class="price"><%= helpers.formatTL(m.revenue_kurus) %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p class="empty-note">Henüz kayıtlı sipariş yok.</p>
+      <% } %>
+    </section>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Durum Dağılımı</h2></header>
+      <% if (stats.byStatus.length) { %>
+        <ul class="bar-list">
+          <% stats.byStatus.forEach(function (s) { %>
+            <li>
+              <span class="bar-label"><%= { pending: 'Ödeme bekliyor', paid: 'Ödendi', cancelled: 'İptal', refunded: 'İade edildi' }[s.status] || s.status %></span>
+              <span class="bar-track"><span class="bar-fill" style="width: <%= stats.total_count ? Math.round((s.n / stats.total_count) * 100) : 0 %>%"></span></span>
+              <span class="bar-value"><%= helpers.formatNumber(s.n) %></span>
+            </li>
+          <% }); %>
+        </ul>
+      <% } else { %>
+        <p class="empty-note">Veri yok.</p>
+      <% } %>
+    </section>
+
+    <div class="notice notice-info reveal">
+      <h3>Veri Şeffaflığı</h3>
+      <p>
+        Bu panelde gösterilen tüm sayılar sipariş tablosundan anlık hesaplanır. Gösterim amacıyla
+        üretilmiş örnek veya kurgusal istatistik bulunmaz.
+      </p>
+    </div>
+  </div>
+</div>

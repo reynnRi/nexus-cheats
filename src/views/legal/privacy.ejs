@@ -1,0 +1,65 @@
+<section class="page-head">
+  <div class="container">
+    <p class="section-kicker">KURUMSAL</p>
+    <h1 class="page-title">Gizlilik Politikası</h1>
+    <p class="section-lead">Son güncelleme: 13 Ekim 2026</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container legal-body">
+    <h2>1. Veri Sorumlusu</h2>
+    <p>
+      Bu platform <%= company.legalName %> tarafından işletilmektedir (<%= company.address %>,
+      Vergi Dairesi: <%= company.taxOffice %>). Kişisel verileriniz 6698 sayılı Kişisel Verilerin
+      Korunması Kanunu ("KVKK") kapsamında işlenir.
+    </p>
+
+    <h2>2. İşlenen Veriler</h2>
+    <ul class="feature-list">
+      <li><strong>Hesap verileri:</strong> ad soyad, e-posta adresi, şifrelenmiş şifre özeti (bcrypt).</li>
+      <li><strong>Sipariş verileri:</strong> sipariş numarası, paket, tutar, durum ve tarih kayıtları.</li>
+      <li><strong>Üyelik verileri:</strong> başlangıç/bitiş tarihleri, paket adı.</li>
+      <li><strong>Destek kayıtları:</strong> talep konusu, kategori ve mesaj içerikleri.</li>
+      <li><strong>Teknik veriler:</strong> oturum çerezi ve güvenlik günlükleri.</li>
+    </ul>
+
+    <h2>3. İşleme Amaçları</h2>
+    <p>
+      Veriler; üyelik hizmetinin sunulması, siparişlerin işlenmesi, destek taleplerinin yanıtlanması,
+      hesap güvenliğinin sağlanması ve yasal yükümlülüklerin yerine getirilmesi amacıyla işlenir.
+    </p>
+
+    <h2>4. Ödeme Verileri</h2>
+    <p>
+      <strong>Kart bilgileri bu platformda işlenmez ve saklanmaz.</strong> Ödeme, anlaşmalı ödeme
+      kuruluşunun güvenli sayfasında gerçekleştirilir. Bize yalnızca işlem sonucu (onay/red) ve
+      işlem referansı iletilir.
+    </p>
+
+    <h2>5. Çerezler</h2>
+    <p>
+      Yalnızca oturum yönetimi için zorunlu bir çerez (<span class="mono">nexus.sid</span>) kullanılır.
+      Bu çerez <span class="mono">HttpOnly</span> ve <span class="mono">SameSite=Lax</span>
+      öznitelikleriyle korunur. Reklam veya izleme çerezi kullanılmaz.
+    </p>
+
+    <h2>6. Saklama Süresi</h2>
+    <p>
+      Hesap verileri hesabınız açık olduğu sürece; sipariş ve fatura kayıtları ilgili mevzuatın
+      öngördüğü süre boyunca saklanır. Süre sonunda veriler silinir veya anonim hale getirilir.
+    </p>
+
+    <h2>7. Haklarınız</h2>
+    <p>
+      KVKK'nın 11. maddesi kapsamında verilerinize erişme, düzeltme, silme ve işlemeye itiraz etme
+      hakkına sahipsiniz. Taleplerinizi <%= company.email %> adresine iletebilirsiniz.
+    </p>
+
+    <h2>8. Güvenlik</h2>
+    <p>
+      Şifreler tek yönlü olarak hash'lenir. Oturumlar imzalı çerezlerle yönetilir, formlar CSRF
+      korumasına tabidir ve tüm trafik TLS ile şifrelenir.
+    </p>
+  </div>
+</section>

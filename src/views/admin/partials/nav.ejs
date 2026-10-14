@@ -1,0 +1,17 @@
+<nav class="admin-nav" aria-label="Yönetim menüsü">
+  <ul>
+    <li><a href="/admin" class="<%= activeAdminNav === 'dashboard' ? 'is-active' : '' %>">Genel Bakış</a></li>
+    <li><a href="/admin/urunler" class="<%= activeAdminNav === 'urunler' ? 'is-active' : '' %>">Ürünler</a></li>
+    <li><a href="/admin/paketler" class="<%= activeAdminNav === 'paketler' ? 'is-active' : '' %>">Üyelik Paketleri</a></li>
+    <li><a href="/admin/siparisler" class="<%= activeAdminNav === 'siparisler' ? 'is-active' : '' %>">Siparişler</a></li>
+    <li><a href="/admin/kullanicilar" class="<%= activeAdminNav === 'kullanicilar' ? 'is-active' : '' %>">Kullanıcılar</a></li>
+    <li>
+      <a href="/admin/destek" class="<%= activeAdminNav === 'destek' ? 'is-active' : '' %>">
+        Destek Talepleri
+        <% if (openTicketCount) { %><span class="nav-badge"><%= openTicketCount %></span><% } %>
+      </a>
+    </li>
+    <li><a href="/admin/istatistikler" class="<%= activeAdminNav === 'istatistikler' ? 'is-active' : '' %>">İstatistikler</a></li>
+    <li class="panel-nav-sep"><a href="/panel">Kullanıcı Paneli</a></li>
+  </ul>
+</nav>

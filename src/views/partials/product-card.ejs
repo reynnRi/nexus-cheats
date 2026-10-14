@@ -1,0 +1,19 @@
+<article class="product-card reveal">
+  <a class="product-media" href="/urunler/<%= product.slug %>" tabindex="-1" aria-hidden="true">
+    <img src="<%= helpers.productArt(product.game, product.slug) %>" alt="" width="540" height="360" loading="lazy">
+    <span class="product-tag"><%= product.game === 'valorant' ? 'VALORANT' : 'CS2' %></span>
+  </a>
+  <div class="product-body">
+    <h3 class="product-title"><a href="/urunler/<%= product.slug %>"><%= product.name %></a></h3>
+    <p class="product-summary"><%= product.summary %></p>
+    <ul class="feature-list feature-list-compact">
+      <% product.features.slice(0, 3).forEach(function (f) { %>
+        <li><%= f %></li>
+      <% }); %>
+    </ul>
+    <div class="product-foot">
+      <span class="price"><%= helpers.formatTL(product.price_kurus) %></span>
+      <a href="/urunler/<%= product.slug %>" class="btn btn-outline btn-sm">Detaylar</a>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,29 @@
+<article class="plan-card reveal <%= plan.badge === 'EN AVANTAJLI' ? 'plan-featured' : '' %>">
+  <% if (plan.badge) { %><span class="plan-badge"><%= plan.badge %></span><% } %>
+  <header class="plan-head">
+    <h3 class="plan-name"><%= plan.name %></h3>
+    <p class="plan-tagline"><%= plan.tagline %></p>
+    <p class="plan-price">
+      <span class="plan-amount"><%= helpers.formatTL(plan.price_kurus) %></span>
+      <span class="plan-period"><%= plan.duration_days === null ? 'tek seferlik' : '/ ' + plan.duration_days + ' gün' %></span>
+    </p>
+  </header>
+
+  <ul class="feature-list">
+    <% plan.features.forEach(function (f) { %>
+      <li><%= f %></li>
+    <% }); %>
+  </ul>
+
+  <% if (currentUser) { %>
+    <form action="/panel/siparis" method="post" class="plan-form">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="planId" value="<%= plan.id %>">
+      <input type="hidden" name="next" value="/odeme-devam">
+      <button type="submit" class="btn btn-primary btn-block">Satın Al</button>
+    </form>
+  <% } else { %>
+    <a href="/giris?devam=<%= encodeURIComponent('/paketler') %>" class="btn btn-primary btn-block">Satın Al</a>
+  <% } %>
+  <p class="plan-footnote">Ödeme adımı, sağlayıcı yapılandırılana kadar etkin değildir.</p>
+</article>

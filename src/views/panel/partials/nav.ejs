@@ -1,0 +1,12 @@
+<nav class="panel-nav" aria-label="Panel menüsü">
+  <ul>
+    <li><a href="/panel" class="<%= activeNav === 'panel' ? 'is-active' : '' %>">Genel Bakış</a></li>
+    <li><a href="/panel/uyelik" class="<%= activeNav === 'uyelik' ? 'is-active' : '' %>">Üyeliğim</a></li>
+    <li><a href="/panel/siparisler" class="<%= activeNav === 'siparisler' ? 'is-active' : '' %>">Siparişlerim</a></li>
+    <li><a href="/panel/destek" class="<%= activeNav === 'destek' ? 'is-active' : '' %>">Destek</a></li>
+    <li><a href="/panel/profil" class="<%= activeNav === 'profil' ? 'is-active' : '' %>">Profil Ayarları</a></li>
+    <% if (currentUser.role === 'admin') { %>
+      <li class="panel-nav-sep"><a href="/admin">Yönetim Paneli</a></li>
+    <% } %>
+  </ul>
+</nav>

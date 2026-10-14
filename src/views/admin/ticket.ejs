@@ -1,0 +1,47 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">DESTEK TALEBİ #<%= ticket.id %></p>
+    <h1 class="page-title"><%= ticket.subject %></h1>
+    <p class="section-lead">
+      <%= ticket.user_name %> · <%= ticket.user_email %> ·
+      Durum: <span class="status status-<%= ticket.status %>"><%= { open: 'Açık', answered: 'Yanıtlandı', closed: 'Kapandı' }[ticket.status] || ticket.status %></span>
+    </p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <div class="thread reveal">
+      <% messageList.forEach(function (m) { %>
+        <article class="thread-msg <%= m.is_staff ? 'thread-staff' : 'thread-user' %>">
+          <header class="thread-head">
+            <span class="thread-author"><%= m.is_staff ? 'NEXUS Destek' : (m.author_name || 'Kullanıcı') %></span>
+            <span class="thread-date"><%= helpers.formatDateTR(m.created_at) %></span>
+          </header>
+          <p class="thread-body"><%= m.body %></p>
+        </article>
+      <% }); %>
+    </div>
+
+    <form action="/admin/destek/<%= ticket.id %>" method="post" class="form-grid reveal">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="field field-full">
+        <label for="message">Yanıt</label>
+        <textarea id="message" name="message" rows="5" required minlength="2" maxlength="4000"></textarea>
+        <% if (errors.message) { %><p class="field-error"><%= errors.message %></p><% } %>
+      </div>
+      <div class="field field-check">
+        <label class="check">
+          <input type="checkbox" name="closeTicket" value="1">
+          <span>Yanıtla birlikte talebi kapat</span>
+        </label>
+      </div>
+      <div class="field field-full form-actions">
+        <button type="submit" class="btn btn-primary">Yanıtla</button>
+        <a href="/admin/destek" class="btn btn-ghost">Taleplere Dön</a>
+      </div>
+    </form>
+  </div>
+</div>

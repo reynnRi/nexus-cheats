@@ -1,0 +1,55 @@
+<section class="auth-shell">
+  <div class="container auth-grid">
+    <div class="auth-aside reveal">
+      <p class="section-kicker">ÜYELİK</p>
+      <h1 class="auth-title">Hesabını <span class="neon">Oluştur</span></h1>
+      <p class="section-lead">Ücretsiz hesap oluştur, üyelik paketini seç ve desteklenen tüm eğitim ürünlerine eriş.</p>
+      <ul class="feature-list feature-list-lg">
+        <li>Kullanıcı paneli ve üyelik takibi</li>
+        <li>Sipariş geçmişi ve fatura kaydı</li>
+        <li>Destek talebi oluşturma</li>
+      </ul>
+    </div>
+
+    <div class="auth-card reveal">
+      <h2 class="auth-card-title">Üye Ol</h2>
+
+      <% if (errors._) { %><div class="form-error form-error-top"><%= errors._ %></div><% } %>
+
+      <form action="/kayit" method="post" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div class="field">
+          <label for="fullName">Ad Soyad</label>
+          <input type="text" id="fullName" name="fullName" value="<%= form.fullName %>" autocomplete="name" required minlength="3" maxlength="80">
+          <% if (errors.fullName) { %><p class="field-error"><%= errors.fullName %></p><% } %>
+        </div>
+
+        <div class="field">
+          <label for="email">E-posta</label>
+          <input type="email" id="email" name="email" value="<%= form.email %>" autocomplete="email" required maxlength="160">
+          <% if (errors.email) { %><p class="field-error"><%= errors.email %></p><% } %>
+        </div>
+
+        <div class="field">
+          <label for="password">Şifre</label>
+          <input type="password" id="password" name="password" autocomplete="new-password" required minlength="8">
+          <p class="field-hint">En az 8 karakter, bir harf ve bir rakam içermeli.</p>
+          <% if (errors.password) { %><p class="field-error"><%= errors.password %></p><% } %>
+        </div>
+
+        <div class="field">
+          <label for="passwordConfirm">Şifre (tekrar)</label>
+          <input type="password" id="passwordConfirm" name="passwordConfirm" autocomplete="new-password" required minlength="8">
+          <% if (errors.passwordConfirm) { %><p class="field-error"><%= errors.passwordConfirm %></p><% } %>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Hesap Oluştur</button>
+      </form>
+
+      <p class="auth-switch">
+        Zaten hesabınız var mı? <a href="/giris">Giriş yapın</a>
+      </p>
+    </div>
+  </div>
+</section>

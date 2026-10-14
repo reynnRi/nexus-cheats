@@ -1,0 +1,45 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">YÖNETİM PANELİ</p>
+    <h1 class="page-title">Destek Talepleri</h1>
+    <p class="section-lead">Kullanıcı taleplerini yanıtlayın.</p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <div class="filter-bar reveal">
+      <a href="/admin/destek" class="chip <%= filter.status === '' ? 'is-active' : '' %>">Tümü</a>
+      <a href="/admin/destek?durum=open" class="chip <%= filter.status === 'open' ? 'is-active' : '' %>">Açık</a>
+      <a href="/admin/destek?durum=answered" class="chip <%= filter.status === 'answered' ? 'is-active' : '' %>">Yanıtlandı</a>
+      <a href="/admin/destek?durum=closed" class="chip <%= filter.status === 'closed' ? 'is-active' : '' %>">Kapandı</a>
+    </div>
+
+    <% if (ticketList.length) { %>
+      <div class="table-wrap reveal">
+        <table class="data-table">
+          <thead>
+            <tr><th scope="col">Konu</th><th scope="col">Kullanıcı</th><th scope="col">Kategori</th><th scope="col">Mesaj</th><th scope="col">Durum</th><th scope="col">Güncelleme</th><th scope="col"></th></tr>
+          </thead>
+          <tbody>
+            <% ticketList.forEach(function (t) { %>
+              <tr>
+                <th scope="row"><%= t.subject %></th>
+                <td><%= t.user_name %><br><span class="muted"><%= t.user_email %></span></td>
+                <td><%= { genel: 'Genel', odeme: 'Ödeme', uyelik: 'Üyelik', teknik: 'Teknik' }[t.category] || t.category %></td>
+                <td><%= t.message_count %></td>
+                <td><span class="status status-<%= t.status %>"><%= { open: 'Açık', answered: 'Yanıtlandı', closed: 'Kapandı' }[t.status] || t.status %></span></td>
+                <td><%= helpers.formatDateTR(t.updated_at) %></td>
+                <td><a href="/admin/destek/<%= t.id %>">Yanıtla</a></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="empty-note">Bu filtreyle eşleşen talep bulunamadı.</p>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,146 @@
+<section class="hero">
+  <div class="hero-scan" aria-hidden="true"></div>
+  <div class="container hero-inner">
+    <p class="hero-kicker reveal">REKABETÇİ FPS EĞİTİM PLATFORMU</p>
+    <h1 class="hero-title reveal">
+      HER MAÇTA<br><span class="neon">FARKINI ORTAYA KOY</span>
+    </h1>
+    <p class="hero-sub reveal">
+      Rekabetçi FPS deneyimini bir üst seviyeye taşı. Ölçülebilir antrenman programları,
+      harita rehberleri ve birebir maç analizi ile gelişimini takip et.
+    </p>
+
+    <div class="hero-actions reveal">
+      <a href="/paketler" class="btn btn-primary btn-lg">Paketleri İncele</a>
+      <a href="/urunler" class="btn btn-outline btn-lg">Ürünleri Keşfet</a>
+    </div>
+
+    <ul class="hero-stats reveal">
+      <li><strong><%= heroGameCount %></strong><span>Yayında ürün</span></li>
+      <li><strong>2</strong><span>Oyun kategorisi</span></li>
+      <li><strong>3</strong><span>Üyelik paketi</span></li>
+      <li><strong>%100</strong><span>Kural uyumlu içerik</span></li>
+    </ul>
+  </div>
+
+  <div class="hero-rail" aria-hidden="true">
+    <span></span><span></span><span></span>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="section-kicker">KATEGORİLER</p>
+      <h2 class="section-title">Oyun <span class="neon">Kategorileri</span></h2>
+      <p class="section-lead">Her iki oyun için hazırlanmış eğitim ve analiz ürünleri. Üyelik paketleri iki kategoride de aynı fiyatlarla geçerlidir.</p>
+    </header>
+
+    <div class="game-grid">
+      <article class="game-panel reveal">
+        <div class="game-media">
+          <img src="<%= helpers.productArt('valorant', 'valorant-category') %>" alt="VALORANT kategorisi" width="540" height="360" loading="lazy">
+        </div>
+        <div class="game-body">
+          <h3 class="game-title">VALORANT</h3>
+          <p class="game-desc">Aim programı, lineup kütüphanesi ve birebir VOD analizi ile rank yükselme sürecini planla.</p>
+          <ul class="feature-list">
+            <li>Kademeli antrenman planları</li>
+            <li>Harita bazlı lineup rehberleri</li>
+            <li>Koç eşliğinde maç analizi</li>
+          </ul>
+          <a href="/urunler?oyun=valorant" class="btn btn-outline">VALORANT Ürünleri</a>
+        </div>
+      </article>
+
+      <article class="game-panel reveal">
+        <div class="game-media">
+          <img src="<%= helpers.productArt('cs2', 'cs2-category') %>" alt="Counter-Strike 2 kategorisi" width="540" height="360" loading="lazy">
+        </div>
+        <div class="game-body">
+          <h3 class="game-title">COUNTER-STRIKE 2</h3>
+          <p class="game-desc">Spray kontrolü, utility kurulumları ve demo analizi ile oyun bilgini sistematik hale getir.</p>
+          <ul class="feature-list">
+            <li>Aim ve spray antrenman modülü</li>
+            <li>Smoke ve molotov rehberi</li>
+            <li>Round bazlı ekonomi analizi</li>
+          </ul>
+          <a href="/urunler?oyun=cs2" class="btn btn-outline">CS2 Ürünleri</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<% if (valorant.length || cs2.length) { %>
+<section class="section section-alt">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="section-kicker">ÖNE ÇIKANLAR</p>
+      <h2 class="section-title">Popüler <span class="neon">Ürünler</span></h2>
+    </header>
+
+    <div class="product-grid">
+      <% valorant.forEach(function (p) { %>
+        <%- include('./partials/product-card.ejs', { product: p }) %>
+      <% }); %>
+      <% cs2.forEach(function (p) { %>
+        <%- include('./partials/product-card.ejs', { product: p }) %>
+      <% }); %>
+    </div>
+
+    <div class="section-cta reveal">
+      <a href="/urunler" class="btn btn-primary">Tüm Ürünleri Gör</a>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="section" id="paketler">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="section-kicker">ÜYELİK</p>
+      <h2 class="section-title">Üyelik <span class="neon">Paketleri</span></h2>
+      <p class="section-lead">Tek üyelikle desteklenen tüm ürünlere eriş. Fiyatlar Türk lirası cinsindendir.</p>
+    </header>
+
+    <div class="plan-grid">
+      <% planList.forEach(function (plan) { %>
+        <%- include('./partials/plan-card.ejs', { plan: plan }) %>
+      <% }); %>
+    </div>
+
+    <p class="section-note reveal">
+      Üyelikler, ödeme onaylandığı anda otomatik olarak etkinleşir ve panelde kalan süre takip edilir.
+    </p>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <header class="section-head reveal">
+      <p class="section-kicker">NASIL ÇALIŞIR</p>
+      <h2 class="section-title">Dört Adımda <span class="neon">Başla</span></h2>
+    </header>
+
+    <ol class="step-grid">
+      <li class="step-card reveal"><span class="step-no">01</span><h3>Hesap Oluştur</h3><p>E-posta ve şifre ile saniyeler içinde üye ol.</p></li>
+      <li class="step-card reveal"><span class="step-no">02</span><h3>Paketini Seç</h3><p>Aylık, yıllık veya sınırsız üyelikten birini seç.</p></li>
+      <li class="step-card reveal"><span class="step-no">03</span><h3>Ürünlere Eriş</h3><p>Panelinden desteklenen tüm ürünlere ulaş.</p></li>
+      <li class="step-card reveal"><span class="step-no">04</span><h3>Gelişimini Takip Et</h3><p>İstatistiklerini izle, koç geri bildirimi al.</p></li>
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="notice notice-info reveal">
+      <h3>Şeffaflık Notu</h3>
+      <p>
+        NEXUS CHEATS bir <strong>eğitim ve koçluk</strong> platformudur. Ürünler oyunların kullanım
+        kurallarına uygun içeriklerden oluşur; oyun dosyalarını değiştiren, avantaj sağlayan veya
+        yasaklı üçüncü taraf yazılımlar sunulmaz. Oyun geliştiricileriyle resmî bir ortaklığımız yoktur.
+      </p>
+    </div>
+  </div>
+</section>

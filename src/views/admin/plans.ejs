@@ -1,0 +1,124 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">YÖNETİM PANELİ</p>
+    <h1 class="page-title">Üyelik Paketleri</h1>
+    <p class="section-lead">Fiyat ve içerik yönetimi. Fiyatlar Türk lirası cinsindendir.</p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <% planList.forEach(function (plan) { %>
+      <section class="panel-section reveal">
+        <header class="panel-section-head">
+          <h2><%= plan.name %></h2>
+          <span class="price"><%= helpers.formatTL(plan.price_kurus) %></span>
+        </header>
+
+        <form action="/admin/paketler/<%= plan.id %>" method="post" class="form-grid" novalidate>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+          <div class="field">
+            <label for="name-<%= plan.id %>">Paket adı</label>
+            <input type="text" id="name-<%= plan.id %>" name="name" value="<%= plan.name %>" required maxlength="80">
+          </div>
+
+          <div class="field">
+            <label for="slug-<%= plan.id %>">Slug</label>
+            <input type="text" id="slug-<%= plan.id %>" name="slug" value="<%= plan.slug %>" required pattern="[a-z0-9\-]{3,60}">
+          </div>
+
+          <div class="field">
+            <label for="priceTL-<%= plan.id %>">Fiyat (TL)</label>
+            <input type="number" id="priceTL-<%= plan.id %>" name="priceTL" value="<%= plan.price_kurus / 100 %>" min="0" step="0.01" required>
+          </div>
+
+          <div class="field">
+            <label for="durationDays-<%= plan.id %>">Süre (gün)</label>
+            <input type="number" id="durationDays-<%= plan.id %>" name="durationDays" value="<%= plan.duration_days === null ? '' : plan.duration_days %>" min="1" max="36500" placeholder="Boş = süresiz">
+            <p class="field-hint">Boş bırakılırsa paket süresiz (sınırsız) olur.</p>
+          </div>
+
+          <div class="field">
+            <label for="tagline-<%= plan.id %>">Kısa tanıtım</label>
+            <input type="text" id="tagline-<%= plan.id %>" name="tagline" value="<%= plan.tagline %>" maxlength="120">
+          </div>
+
+          <div class="field">
+            <label for="badge-<%= plan.id %>">Etiket</label>
+            <input type="text" id="badge-<%= plan.id %>" name="badge" value="<%= plan.badge || '' %>" maxlength="30" placeholder="EN AVANTAJLI">
+          </div>
+
+          <div class="field field-full">
+            <label for="features-<%= plan.id %>">Özellikler</label>
+            <textarea id="features-<%= plan.id %>" name="features" rows="5"><%= plan.features.join('\n') %></textarea>
+            <p class="field-hint">Her satır bir madde olarak listelenir.</p>
+          </div>
+
+          <div class="field">
+            <label for="sortOrder-<%= plan.id %>">Sıralama</label>
+            <input type="number" id="sortOrder-<%= plan.id %>" name="sortOrder" value="<%= plan.sort_order %>" min="0" max="999">
+          </div>
+
+          <div class="field field-check">
+            <label class="check">
+              <input type="checkbox" name="isActive" value="1" <%= plan.is_active ? 'checked' : '' %>>
+              <span>Paket satışta</span>
+            </label>
+          </div>
+
+          <div class="field field-full form-actions">
+            <button type="submit" class="btn btn-primary btn-sm">Kaydet</button>
+          </div>
+        </form>
+      </section>
+    <% }); %>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Yeni Paket Ekle</h2></header>
+      <form action="/admin/paketler" method="post" class="form-grid" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div class="field">
+          <label for="new-name">Paket adı</label>
+          <input type="text" id="new-name" name="name" required maxlength="80">
+        </div>
+        <div class="field">
+          <label for="new-slug">Slug</label>
+          <input type="text" id="new-slug" name="slug" required pattern="[a-z0-9\-]{3,60}">
+        </div>
+        <div class="field">
+          <label for="new-price">Fiyat (TL)</label>
+          <input type="number" id="new-price" name="priceTL" min="0" step="0.01" required>
+        </div>
+        <div class="field">
+          <label for="new-duration">Süre (gün)</label>
+          <input type="number" id="new-duration" name="durationDays" min="1" max="36500" placeholder="Boş = süresiz">
+        </div>
+        <div class="field">
+          <label for="new-tagline">Kısa tanıtım</label>
+          <input type="text" id="new-tagline" name="tagline" maxlength="120">
+        </div>
+        <div class="field">
+          <label for="new-badge">Etiket</label>
+          <input type="text" id="new-badge" name="badge" maxlength="30">
+        </div>
+        <div class="field field-full">
+          <label for="new-features">Özellikler</label>
+          <textarea id="new-features" name="features" rows="4" placeholder="Her satıra bir özellik"></textarea>
+        </div>
+        <div class="field field-check">
+          <label class="check">
+            <input type="checkbox" name="isActive" value="1" checked>
+            <span>Paket satışta</span>
+          </label>
+        </div>
+        <div class="field field-full form-actions">
+          <button type="submit" class="btn btn-primary">Paketi Ekle</button>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>

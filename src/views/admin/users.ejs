@@ -1,0 +1,51 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">YÖNETİM PANELİ</p>
+    <h1 class="page-title">Kullanıcılar</h1>
+    <p class="section-lead">Kullanıcı hesaplarını yönetin, üyelik tanımlayın.</p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <form action="/admin/kullanicilar" method="get" class="filter-form reveal">
+      <div class="field">
+        <label for="q">Ara</label>
+        <input type="text" id="q" name="q" value="<%= filter.q %>" placeholder="Ad soyad veya e-posta">
+      </div>
+      <div class="field field-inline-action">
+        <button type="submit" class="btn btn-outline btn-sm">Ara</button>
+      </div>
+    </form>
+
+    <% if (userList.length) { %>
+      <div class="table-wrap reveal">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Kullanıcı</th><th scope="col">Rol</th><th scope="col">Ödenmiş sipariş</th>
+              <th scope="col">Toplam</th><th scope="col">Açık talep</th><th scope="col">Durum</th><th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% userList.forEach(function (u) { %>
+              <tr>
+                <th scope="row"><%= u.full_name %><br><span class="muted"><%= u.email %></span></th>
+                <td><%= u.role === 'admin' ? 'Yönetici' : 'Üye' %></td>
+                <td><%= u.paid_orders %></td>
+                <td class="price"><%= helpers.formatTL(u.total_kurus) %></td>
+                <td><%= u.open_tickets %></td>
+                <td><span class="status status-<%= u.is_blocked ? 'cancelled' : 'paid' %>"><%= u.is_blocked ? 'Askıda' : 'Aktif' %></span></td>
+                <td><a href="/admin/kullanicilar/<%= u.id %>">Detay</a></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <p class="empty-note">Kullanıcı bulunamadı.</p>
+    <% } %>
+  </div>
+</div>

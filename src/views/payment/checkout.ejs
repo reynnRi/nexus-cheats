@@ -1,0 +1,77 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">ÖDEME</p>
+    <h1 class="page-title">Ödeme Adımı</h1>
+    <p class="section-lead">Sipariş özetinizi kontrol edin ve ödemeyi tamamlayın.</p>
+  </div>
+</section>
+
+<div class="container panel-layout">
+  <%- include('../panel/partials/nav.ejs', { activeNav: activeNav }) %>
+
+  <div class="panel-content">
+    <div class="checkout-grid">
+      <div class="detail-card reveal">
+        <h2 class="detail-card-title">Sipariş Özeti</h2>
+        <ul class="kv-list">
+          <li><span>Sipariş numarası</span><strong class="mono"><%= order.order_no %></strong></li>
+          <li><span>Üyelik paketi</span><strong><%= order.plan_name %></strong></li>
+          <li><span>Süre</span><strong><%= order.plan_name.includes('SINIRSIZ') ? 'Süresiz' : (order.plan_name.includes('YILLIK') ? '365 gün' : '30 gün') %></strong></li>
+          <li><span>Oluşturma</span><strong><%= helpers.formatDateTR(order.created_at) %></strong></li>
+          <li><span>Durum</span><strong><span class="status status-<%= order.status %>"><%= { pending: 'Ödeme bekliyor', paid: 'Ödendi', cancelled: 'İptal', refunded: 'İade edildi' }[order.status] || order.status %></span></strong></li>
+        </ul>
+
+        <div class="checkout-total">
+          <span>Ödenecek tutar</span>
+          <strong class="price price-lg"><%= helpers.formatTL(order.amount_kurus) %></strong>
+        </div>
+      </div>
+
+      <div class="detail-card reveal">
+        <h2 class="detail-card-title">Ödeme</h2>
+
+        <% if (order.status === 'paid') { %>
+          <div class="notice notice-info">
+            <h3>Bu sipariş ödenmiş</h3>
+            <p>Üyeliğiniz aktif. Detayları <a href="/panel/uyelik">Üyeliğim</a> sayfasından görebilirsiniz.</p>
+          </div>
+        <% } else if (!paymentStatus.ready) { %>
+          <div class="notice notice-warn">
+            <h3>Ödeme altyapısı yapılandırılmadı</h3>
+            <p><%= paymentStatus.detail %></p>
+            <p class="notice-small">
+              Bu nedenle ödeme adımı <strong>devre dışıdır</strong>. Siparişiniz "ödeme bekliyor" olarak
+              kayıtlı kaldı; <strong>hiçbir tahsilat yapılmadı</strong> ve üyeliğiniz başlatılmadı.
+              Ödeme sağlayıcısı bağlandığında bu sayfadan ödemeyi tamamlayabilirsiniz.
+            </p>
+            <ul class="kv-list">
+              <li><span>Seçili sağlayıcı</span><strong><%= paymentConfig.providerLabel || 'Tanımlı değil' %></strong></li>
+              <% if (paymentConfig.missing && paymentConfig.missing.length) { %>
+                <li><span>Eksik anahtarlar</span><strong class="mono"><%= paymentConfig.missing.join(', ') %></strong></li>
+              <% } %>
+            </ul>
+          </div>
+        <% } else { %>
+          <p class="panel-note">
+            Ödeme, sağlayıcının güvenli sayfasında alınır. Kart bilgileriniz bu sunucuya iletilmez.
+          </p>
+          <form action="/odeme/<%= order.order_no %>/baslat" method="post">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Ödemeyi Başlat</button>
+          </form>
+        <% } %>
+
+        <ul class="security-list">
+          <li>256-bit TLS ile şifreli bağlantı</li>
+          <li>Kart bilgileri sunucumuzda saklanmaz</li>
+          <li>Ödeme onayı sonrası üyelik otomatik etkinleşir</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="panel-actions reveal">
+      <a href="/panel/siparisler/<%= order.order_no %>" class="btn btn-outline btn-sm">Sipariş Detayı</a>
+      <a href="/panel/destek" class="btn btn-ghost btn-sm">Sorun mu var? Destek</a>
+    </div>
+  </div>
+</div>

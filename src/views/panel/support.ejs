@@ -1,0 +1,69 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">KULLANICI PANELİ</p>
+    <h1 class="page-title">Destek</h1>
+    <p class="section-lead">Sorularını ve taleplerini buradan ilet. Yanıtlar panelinde görünür.</p>
+  </div>
+</section>
+
+<div class="container panel-layout">
+  <%- include('./partials/nav.ejs', { activeNav: activeNav }) %>
+
+  <div class="panel-content">
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Yeni Destek Talebi</h2></header>
+
+      <form action="/panel/destek" method="post" class="form-grid" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+        <div class="field">
+          <label for="subject">Konu</label>
+          <input type="text" id="subject" name="subject" value="<%= form.subject || '' %>" required minlength="5" maxlength="140">
+          <% if (errors.subject) { %><p class="field-error"><%= errors.subject %></p><% } %>
+        </div>
+
+        <div class="field">
+          <label for="category">Kategori</label>
+          <select id="category" name="category" required>
+            <option value="genel" <%= form.category === 'genel' ? 'selected' : '' %>>Genel</option>
+            <option value="odeme" <%= form.category === 'odeme' ? 'selected' : '' %>>Ödeme</option>
+            <option value="uyelik" <%= form.category === 'uyelik' ? 'selected' : '' %>>Üyelik</option>
+            <option value="teknik" <%= form.category === 'teknik' ? 'selected' : '' %>>Teknik</option>
+          </select>
+          <% if (errors.category) { %><p class="field-error"><%= errors.category %></p><% } %>
+        </div>
+
+        <div class="field field-full">
+          <label for="message">Mesaj</label>
+          <textarea id="message" name="message" rows="6" required minlength="15" maxlength="4000"><%= form.message || '' %></textarea>
+          <p class="field-hint">Sorununuzu ve varsa sipariş numaranızı belirtin.</p>
+          <% if (errors.message) { %><p class="field-error"><%= errors.message %></p><% } %>
+        </div>
+
+        <div class="field field-full">
+          <button type="submit" class="btn btn-primary">Talebi Gönder</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Taleplerim</h2></header>
+      <% if (ticketList.length) { %>
+        <ul class="ticket-list">
+          <% ticketList.forEach(function (t) { %>
+            <li>
+              <a href="/panel/destek/<%= t.id %>">
+                <span class="ticket-subject"><%= t.subject %></span>
+                <span class="ticket-cat"><%= { genel: 'Genel', odeme: 'Ödeme', uyelik: 'Üyelik', teknik: 'Teknik' }[t.category] || t.category %></span>
+                <span class="status status-<%= t.status %>"><%= { open: 'Açık', answered: 'Yanıtlandı', closed: 'Kapandı' }[t.status] || t.status %></span>
+                <span class="ticket-date"><%= helpers.formatDayTR(t.updated_at) %></span>
+              </a>
+            </li>
+          <% }); %>
+        </ul>
+      <% } else { %>
+        <p class="empty-note">Henüz destek talebiniz yok.</p>
+      <% } %>
+    </section>
+  </div>
+</div>

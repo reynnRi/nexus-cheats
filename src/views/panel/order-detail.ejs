@@ -1,0 +1,49 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">SİPARİŞ</p>
+    <h1 class="page-title mono"><%= order.order_no %></h1>
+    <p class="section-lead">Sipariş detayları ve ödeme durumu.</p>
+  </div>
+</section>
+
+<div class="container panel-layout">
+  <%- include('./partials/nav.ejs', { activeNav: activeNav }) %>
+
+  <div class="panel-content">
+    <div class="detail-card reveal">
+      <h2 class="detail-card-title">Sipariş Özeti</h2>
+      <ul class="kv-list">
+        <li><span>Sipariş numarası</span><strong class="mono"><%= order.order_no %></strong></li>
+        <li><span>Paket</span><strong><%= order.plan_name %></strong></li>
+        <li><span>Tutar</span><strong class="price"><%= helpers.formatTL(order.amount_kurus) %></strong></li>
+        <li><span>Durum</span><strong><span class="status status-<%= order.status %>"><%= { pending: 'Ödeme bekliyor', paid: 'Ödendi', cancelled: 'İptal', refunded: 'İade edildi' }[order.status] || order.status %></span></strong></li>
+        <li><span>Oluşturma</span><strong><%= helpers.formatDateTR(order.created_at) %></strong></li>
+        <li><span>Üyelik başlangıcı</span><strong><%= order.period_start ? helpers.formatDateTR(order.period_start) : '—' %></strong></li>
+        <li><span>Üyelik bitişi</span><strong><%= order.period_end ? helpers.formatDateTR(order.period_end) : (order.status === 'paid' ? 'Süresiz' : '—') %></strong></li>
+        <li><span>Ödeme sağlayıcı</span><strong><%= order.payment_provider || '—' %></strong></li>
+      </ul>
+    </div>
+
+    <% if (order.status === 'pending') { %>
+      <div class="notice notice-warn reveal">
+        <h3>Ödeme tamamlanmadı</h3>
+        <p>
+          <% if (!paymentStatus.ready) { %>
+            <%= paymentStatus.detail %> Bu sipariş <strong>"ödeme bekliyor"</strong> durumunda kalacak;
+            hiçbir tahsilat yapılmadı ve üyeliğiniz başlatılmadı.
+          <% } else { %>
+            Ödeme adımını tamamlamak için aşağıdaki butonu kullanın.
+          <% } %>
+        </p>
+        <% if (paymentStatus.ready) { %>
+          <a href="/odeme/<%= order.order_no %>" class="btn btn-primary btn-sm">Ödeme Sayfasına Git</a>
+        <% } %>
+      </div>
+    <% } %>
+
+    <div class="panel-actions reveal">
+      <a href="/panel/siparisler" class="btn btn-outline btn-sm">Siparişlere Dön</a>
+      <a href="/panel/destek" class="btn btn-ghost btn-sm">Destek Talebi Oluştur</a>
+    </div>
+  </div>
+</div>

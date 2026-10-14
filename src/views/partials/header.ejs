@@ -1,0 +1,39 @@
+<header class="site-header" id="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="NEXUS CHEATS ana sayfa">
+      <span class="brand-mark" aria-hidden="true">N</span>
+      <span class="brand-text">NEXUS<span>CHEATS</span></span>
+    </a>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Menüyü aç">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="primary-nav" id="primary-nav" aria-label="Ana menü">
+      <ul class="nav-list">
+        <li><a href="/" class="nav-link <%= currentPath === '/' ? 'is-active' : '' %>">Ana Sayfa</a></li>
+        <li><a href="/urunler" class="nav-link <%= currentPath.startsWith('/urunler') ? 'is-active' : '' %>">Ürünler</a></li>
+        <li><a href="/paketler" class="nav-link <%= currentPath.startsWith('/paketler') ? 'is-active' : '' %>">Paketler</a></li>
+        <li><a href="/iletisim" class="nav-link <%= currentPath.startsWith('/iletisim') ? 'is-active' : '' %>">Destek</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <% if (currentUser) { %>
+          <% if (currentUser.role === 'admin') { %>
+            <a href="/admin" class="btn btn-ghost btn-sm">Yönetim Paneli</a>
+          <% } %>
+          <a href="/panel" class="btn btn-ghost btn-sm">
+            <span class="avatar-dot" aria-hidden="true"></span><%= currentUser.full_name.split(' ')[0] %>
+          </a>
+          <form action="/cikis" method="post" class="inline-form">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <button type="submit" class="btn btn-outline btn-sm">Çıkış</button>
+          </form>
+        <% } else { %>
+          <a href="/giris" class="btn btn-outline btn-sm">Giriş Yap</a>
+          <a href="/kayit" class="btn btn-primary btn-sm">Üye Ol</a>
+        <% } %>
+      </div>
+    </nav>
+  </div>
+</header>

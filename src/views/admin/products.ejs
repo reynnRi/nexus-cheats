@@ -1,0 +1,65 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">YÖNETİM PANELİ</p>
+    <h1 class="page-title">Ürünler</h1>
+    <p class="section-lead">Ürün ekleyin, düzenleyin veya silin.</p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <div class="panel-actions reveal">
+      <a href="/admin/urunler/yeni" class="btn btn-primary btn-sm">Yeni Ürün Ekle</a>
+      <a href="/urunler" class="btn btn-ghost btn-sm">Sitede Gör</a>
+    </div>
+
+    <% ['valorant', 'cs2'].forEach(function (gameKey) { %>
+      <% var items = productList.filter(function (p) { return p.game === gameKey; }); %>
+      <section class="panel-section reveal">
+        <header class="panel-section-head">
+          <h2><%= gameLabels[gameKey] %></h2>
+          <span class="muted"><%= items.length %> ürün</span>
+        </header>
+
+        <% if (items.length) { %>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th scope="col">Ürün</th>
+                  <th scope="col">Slug</th>
+                  <th scope="col">Fiyat</th>
+                  <th scope="col">Sıra</th>
+                  <th scope="col">Durum</th>
+                  <th scope="col">İşlem</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% items.forEach(function (p) { %>
+                  <tr>
+                    <th scope="row"><%= p.name %><br><span class="muted"><%= p.summary.substring(0, 60) %>…</span></th>
+                    <td class="mono"><%= p.slug %></td>
+                    <td class="price"><%= helpers.formatTL(p.price_kurus) %></td>
+                    <td><%= p.sort_order %></td>
+                    <td><span class="status status-<%= p.is_active ? 'paid' : 'cancelled' %>"><%= p.is_active ? 'Yayında' : 'Kapalı' %></span></td>
+                    <td class="row-actions">
+                      <a href="/admin/urunler/<%= p.id %>/duzenle" class="btn btn-outline btn-xs">Düzenle</a>
+                      <form action="/admin/urunler/<%= p.id %>/sil" method="post" class="inline-form" data-confirm="“<%= p.name %>” ürünü kalıcı olarak silinsin mi?">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <button type="submit" class="btn btn-danger btn-xs">Sil</button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        <% } else { %>
+          <p class="empty-note">Bu kategoride ürün yok.</p>
+        <% } %>
+      </section>
+    <% }); %>
+  </div>
+</div>

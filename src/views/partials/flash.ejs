@@ -1,0 +1,10 @@
+<% if (flashes && flashes.length) { %>
+  <div class="container flash-stack" role="status" aria-live="polite">
+    <% flashes.forEach(function (f) { %>
+      <div class="flash flash-<%= f.type %>">
+        <span class="flash-dot" aria-hidden="true"></span>
+        <p><%= f.message %></p>
+      </div>
+    <% }); %>
+  </div>
+<% } %>

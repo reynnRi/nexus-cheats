@@ -1,0 +1,115 @@
+<section class="page-head page-head-panel">
+  <div class="container">
+    <p class="section-kicker">KULLANICI #<%= user.id %></p>
+    <h1 class="page-title"><%= user.full_name %></h1>
+    <p class="section-lead"><%= user.email %> · <%= user.role === 'admin' ? 'Yönetici' : 'Üye' %></p>
+  </div>
+</section>
+
+<div class="container admin-layout">
+  <%- include('./partials/nav.ejs', { activeAdminNav: activeAdminNav }) %>
+
+  <div class="admin-content">
+    <div class="detail-card reveal">
+      <h2 class="detail-card-title">Hesap</h2>
+      <ul class="kv-list">
+        <li><span>Kayıt tarihi</span><strong><%= helpers.formatDateTR(user.created_at) %></strong></li>
+        <li><span>Son güncelleme</span><strong><%= helpers.formatDateTR(user.updated_at) %></strong></li>
+        <li><span>Durum</span><strong><span class="status status-<%= user.is_blocked ? 'cancelled' : 'paid' %>"><%= user.is_blocked ? 'Askıda' : 'Aktif' %></span></strong></li>
+      </ul>
+
+      <form action="/admin/kullanicilar/<%= user.id %>/durum" method="post" class="inline-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="blocked" value="<%= user.is_blocked ? '0' : '1' %>">
+        <button type="submit" class="btn <%= user.is_blocked ? 'btn-outline' : 'btn-danger' %> btn-sm">
+          <%= user.is_blocked ? 'Askıyı Kaldır' : 'Hesabı Askıya Al' %>
+        </button>
+      </form>
+    </div>
+
+    <div class="detail-card reveal">
+      <h2 class="detail-card-title">Üyelik Tanımla</h2>
+      <p class="panel-note">Manuel tanımlama mevcut aktif üyeliği geçersiz kılar ve yeni dönem başlatır.</p>
+      <form action="/admin/kullanicilar/<%= user.id %>/uyelik" method="post" class="filter-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <div class="field">
+          <label for="planId">Paket</label>
+          <select id="planId" name="planId" required>
+            <% planList.forEach(function (p) { %>
+              <option value="<%= p.id %>"><%= p.name %> — <%= helpers.formatTL(p.price_kurus) %> (<%= p.duration_days === null ? 'Süresiz' : p.duration_days + ' gün' %>)</option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="field field-inline-action">
+          <button type="submit" class="btn btn-primary btn-sm">Üyelik Tanımla</button>
+        </div>
+      </form>
+    </div>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Üyelik Geçmişi</h2></header>
+      <% if (membershipList.length) { %>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th scope="col">Paket</th><th scope="col">Başlangıç</th><th scope="col">Bitiş</th><th scope="col">Durum</th></tr></thead>
+            <tbody>
+              <% membershipList.forEach(function (m) { %>
+                <tr>
+                  <th scope="row"><%= m.plan_name %></th>
+                  <td><%= helpers.formatDayTR(m.starts_at) %></td>
+                  <td><%= m.is_lifetime ? 'Süresiz' : helpers.formatDayTR(m.ends_at) %></td>
+                  <td><span class="status status-<%= m.status %>"><%= { active: 'Aktif', superseded: 'Yenilendi', cancelled: 'İptal', expired: 'Süresi doldu' }[m.status] || m.status %></span></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p class="empty-note">Üyelik kaydı yok.</p>
+      <% } %>
+    </section>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Siparişler</h2></header>
+      <% if (orderList.length) { %>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th scope="col">Sipariş</th><th scope="col">Paket</th><th scope="col">Tutar</th><th scope="col">Durum</th><th scope="col">Tarih</th></tr></thead>
+            <tbody>
+              <% orderList.forEach(function (o) { %>
+                <tr>
+                  <th scope="row" class="mono"><%= o.order_no %></th>
+                  <td><%= o.plan_name %></td>
+                  <td class="price"><%= helpers.formatTL(o.amount_kurus) %></td>
+                  <td><span class="status status-<%= o.status %>"><%= { pending: 'Ödeme bekliyor', paid: 'Ödendi', cancelled: 'İptal', refunded: 'İade edildi' }[o.status] || o.status %></span></td>
+                  <td><%= helpers.formatDateTR(o.created_at) %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } else { %>
+        <p class="empty-note">Sipariş kaydı yok.</p>
+      <% } %>
+    </section>
+
+    <section class="panel-section reveal">
+      <header class="panel-section-head"><h2>Destek Talepleri</h2></header>
+      <% if (ticketList.length) { %>
+        <ul class="ticket-list">
+          <% ticketList.forEach(function (t) { %>
+            <li>
+              <a href="/admin/destek/<%= t.id %>">
+                <span class="ticket-subject"><%= t.subject %></span>
+                <span class="status status-<%= t.status %>"><%= { open: 'Açık', answered: 'Yanıtlandı', closed: 'Kapandı' }[t.status] || t.status %></span>
+                <span class="ticket-date"><%= helpers.formatDayTR(t.updated_at) %></span>
+              </a>
+            </li>
+          <% }); %>
+        </ul>
+      <% } else { %>
+        <p class="empty-note">Destek talebi yok.</p>
+      <% } %>
+    </section>
+  </div>
+</div>
